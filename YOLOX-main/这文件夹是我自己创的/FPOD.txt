@@ -1,0 +1,5 @@
+carpk, voc都过yolox，每个grid出3个特征向量
+截去classification的部分，loss不算它，这个向量还剩下两部分，box参数，conf
+被截过的向量，已标注的carpk，全部的voc喂给分类器
+分类器不使用网络结构实现，使用thresholding，比如（已标注的carpk，voc）中conf排前40%的样本算作+
+把这个简单thresholding分类器fit到剩下的未标注carpk上

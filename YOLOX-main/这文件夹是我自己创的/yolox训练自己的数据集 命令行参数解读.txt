@@ -1,0 +1,26 @@
+#----------------
+# train
+#----------------
+一般的格式是
+python tools/train.py -f [你的Exp文件的位置] -d [GPU个数] -b [batch size] -c [权重文件的位置]
+
+我自己电脑上运行的例子是
+python tools/train.py -f exps/example/yolox_voc/yolox_voc_s.py -d 1 -b 3 -c weights/yolox_s.pth
+python tools/train.py -f exps/example/yolox_voc/yolox_voc_x.py -d 1 -b 3 -c weights/yolox_x.pth
+（我自己电脑可以跑_x完整模型权重的batchsize=3版本）
+python tools/train.py -f exps/example/yolox_voc/yolox_voc_x.py -d 4 -b 32 -c weights/yolox_x.pth
+推荐batch size为你GPU个数的8倍，我显存放不下了，4都不行
+
+python tools/train.py -f exps/example/yolox_voc/yolox_voc_s.py -d 1 -b 8 -c weights/yolox_x.pth
+
+#----------------
+# test
+#----------------
+一般的格式是
+python tools/demo.py image -f [你的Exp文件的位置] -c [模型权重的位置] --device [cpu/gpu] (--save_result) --path [待测图片的位置]
+
+我自己运行的例子是
+python tools/demo.py image -f exps/example/yolox_voc/yolox_voc_s.py -c weights/best_ckpt.pth --device cpu --save_result --path assets/carpk/
+python tools/demo.py image -f exps/example/yolox_voc/yolox_voc_x.py -c weights/best_ckpt.pth --device gpu --save_result --path datasets/VOCdevkit/VOC2007/ImageSets/Main/test.txt
+
+--save_result表示要保存结果，在YOLOX_outputs/yolox_voc_s/vis_res/[你运行测试文件的时间] 文件夹下

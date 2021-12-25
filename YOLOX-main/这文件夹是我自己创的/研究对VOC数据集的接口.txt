@@ -1,0 +1,42 @@
+该文件在yolox\data\datasets\voc.py
+
+VOC数据集的格式
+<annotation>
+	<folder>VOC2007</folder>
+	<filename>xxx.jpg</filename>
+	<source>
+		<database>The VOC2007</database>
+		<annotation>PASCAL VOC2007</annotation>
+		<image>flickr，无关</image>
+		<flickrid>一串数字，无关</flickerid>
+	</source>
+	<owner>无关</owner>
+	<size>
+		<width>xxx</width>
+		<height>xxx</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0（1表示图像分割）</segmented>
+	<object>
+		<name>dog</name>
+		<pose>无关</pose>
+		<truncated>0（1表示这个物体有一部分超出图像了）</truncated>
+		<difficult>0（1表示这个样本很难识别，打分的时候会被略过）</difficult>
+		<bndbox>
+			<xmin>...</xmin>
+			<ymin>...</ymin>
+			<xmax>...</xmax>
+			<ymax>...</ymax>
+		</bndbox>
+	</object>
+	<object>更多物体</object>
+</annotation>
+
+yolox\data\datasets\voc.py读取VOC格式需要的关键字（也就是说你需要创建的关键字）
+object
+object.difficult
+object.name
+object.bndbox
+object.bndbox.[xmin, ymin, xmax, ymax]
+size.[width, height]
+

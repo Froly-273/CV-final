@@ -1,0 +1,47 @@
+https://mp.weixin.qq.com/s?__biz=MzUwOTUyMjIwNQ==&mid=2247485209&idx=1&sn=a3b719be41b7578327f935014ea5bd4e&chksm=f911bf6bce66367d6e72fa16ab938dd415aeb823ae2cacee3607825e5dc25b3dcdd4b8b5d7b4&token=1080812831&lang=zh_CN&scene=21#wechat_redirect
+https://www.bilibili.com/video/BV1mP4y1L7kQ
+
+exps/example/yolox_voc/yolox_voc_s.py
+注：如果以后选yolox_x的pretrained weight，需要自己写一个yolox_voc_x.py
+14：self.num_classes = 1
+	只需要car一类
+19：self.data_num_workers = 0
+	防止报错Dataloader worker exited unexpectedly.
+47：image_sets = [('2007', 'trainval')]
+	我没有提供VOC2012格式的数据集
+52:  max_labels = 200
+	一张图片中最多的物体数量，预设是50，但是CARPK的车很密集，提高上限到200
+
+yolox/exp/yolo_base.py
+21:  self.num_classes = 1
+	这个也要改成1
+
+yolox/data/datasets/voc_classes.py
+31：VOC_CLASSES = ("car",)
+	只有car一类，注意后面的逗号是必要的
+
+visualize_helper.py
+它基本上就是yolox/utils/visualize.py的复刻，我没法直接运行visualize.py
+它读取位于datasets/VOCdevkit/results/VOC2007/Main/xxx.txt的预测文件，并将其可视化为bbox
+
+tools/train.py
+4：加了import sys和sys.append('根目录')	
+	防止训练报错No module named yolox.
+
+yolox/evaluators/voc_eval.py
+22：删掉了obj_struct["pose"]和obj_struct["truncated"]
+	因为我在把CARPK数据集转为VOC格式时没加这两项
+
+# ------------------------------------------
+# 以下是做实验三，PFOD的改动
+# ------------------------------------------
+tools/train.py
+94:  加了一个是否使用PFOD做训练的参数，这个参数将被传递下去
+129: exp.merge(args.is_FPOD)
+	把上面这个参数加到exp里
+
+
+yolox/exp/yolox_base.py
+86:  head = YOLOXHead(..., is_PFOD = True)
+	加了一个分支参数is_PFOD，如果是true表示使用PFOD的
+yolox/models/yolo_head.py

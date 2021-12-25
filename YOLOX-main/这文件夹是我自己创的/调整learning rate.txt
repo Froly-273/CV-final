@@ -1,0 +1,37 @@
+可以通过如下路径找到learning rate的位置
+# --------------------------------------------
+# tools/train.py (15): from yolox.exp import get_exp
+# --------------------------------------------
+
+接下来，找到get_exp的定义
+# --------------------------------------------
+# yolox/exp/yolox_base.py (56): self.scheduler = "yoloxwarmcos"
+# --------------------------------------------
+
+确定了learning rate的更新方式是cos lr + warmup
+它的参数为
+# --------------------------------------------
+# yolox/exp/yolox_base.py (55): self.basic_lr_per_img = 0.01 / 64.0
+# yolox/exp/yolox_base.py (202): lr = self.basic_lr_per_img * batch_size
+# 我的batch_size = 3
+# yolox/exp/yolox_base.py (228): scheduler = LRScheduler(..., lr)
+# yolox/utils/lr_scheduler.py (24): self.lr = lr
+# yolox/utils/lr_scheduler.py (54): lr_func = partial(..., self.lr)
+# yolox/utils/lr_scheduler.py (140): lr = min_lr + 0.5 * (lr - min_lr) * (...)
+# --------------------------------------------
+结合cos lr decay的更新公式，我很确定这个模型使用的初始learning rate是0.01/64.0 * batch_size
+修改初始lr在yolox/exp/yolox_base.py (55)把self.basic_lr_per_img改掉
+另外还可以修改的参数是cos lr decay公式中的最小learning rate，通过修改（上面同一个文件）58行的self.min_lr_ratio
+
+并且他这个lr带一个warmup的，公式在
+# --------------------------------------------
+# yolox/exp/yolox_base.py (52): self.warmup_epochs = 5
+# yolox/exp/yolox_base.py (54): self.warmup_lr = 0
+# yolox/utils/lr_scheduler.py(25): self.iters_per_epoch = iters_per_epoch
+# yolox/utils/lr_scheduler.py (50): warmup_total_iters = self.iters_per_epoch * self.warmup_epochs
+# yolox/utils/lr_scheduler.py (134): lr = (lr - warmup_lr_start) * pow(iters / float(warmup_total_iters), 2)
+# --------------------------------------------
+修改yolox/exp/yolox_base.py的52行（warmup epochs）和54行（warmup初始lr）即可
+
+
+

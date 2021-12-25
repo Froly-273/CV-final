@@ -1,0 +1,4 @@
+tools/demo.py
+185 输出了一个counts，可以去看yolox/utils/visualize.py里我改的东西
+189 很确定这个imgae_demo就是它的主函数，现在要重定位测试集
+191 输入的路径默认是assets/carpk，我们要把它重定位到dataset/VOCdevkit/VOC2007/ImageSets

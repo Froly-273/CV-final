@@ -1,0 +1,11 @@
+pip3 install -U pip && pip3 install -r requirements.txt
+pip3 install -v -e .  # or  python3 setup.py develop
+
+pip3 install cython
+pip3 install git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI
+
+下载yolox_s.pth
+python tools/demo.py image -n yolox-s -c /path/to/your/yolox_s.pth --path assets/dog.jpg --conf 0.25 --nms 0.45 --tsize 640 --save_result --device [cpu/gpu]
+我的电脑上版本是python tools/demo.py image -n yolox-x -c weights/yolox_x.pth --path assets/cat.jpg --conf 0.25 --nms 0.45 --tsize 640 --save_result --device gpu
+
+python tools/demo.py image -f exps/example/yolox_voc/yolox_voc_s.py -c weights/best_ckpt.pth --device gpu --save_result --path assets/carpk/

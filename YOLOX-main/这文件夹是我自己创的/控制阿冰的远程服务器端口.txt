@@ -1,0 +1,16 @@
+【登录服务器用】
+ssh -p 50001 qxw-szk@202.120.39.10
+szk-2020
+
+【激活环境】conda activate yolox
+
+【进入项目目录】cd project/yanzige/yolox
+
+【查询GPU指令】nvidia-smi
+【查CPU指令（可以看看有谁在用）】top或者htop(更劲）
+
+【pycharm访问服务器项目文件夹】
+如果右边侧栏（远程服务器文件夹）没出现的话，Tools--deployment--Browse Remote Host
+/home/qxw-szk/project/yanzige/
+
+【上传】右键需要上传的文件--deployment--upload to xxx

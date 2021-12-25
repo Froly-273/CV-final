@@ -1,0 +1,42 @@
+B站视频https://www.bilibili.com/video/BV1mP4y1L7kQ
+
+python tools/train.py -f exps/example/yolox_voc/yolox_voc_s.py -d 1 -b 2 -c weights/yolox_s.pth
+
+voc_classes.py
+----------------------------------------------------------------------------------------
+File "c:\users\aaa\desktop\大三上\cv\ai3064_computer_vision_final_project_\referrences\yolox-main\yolox\data\datasets\voc.py", line 71, in __call__
+    label_idx = self.class_to_ind[name]
+                │    │            └ 'car'
+                │    └ {'c': 0, 'a': 1, 'r': 2}
+                └ <yolox.data.datasets.voc.AnnotationTransform object at 0x000002374C8481F0>
+
+KeyError: 'car'
+----------------------------------------------------------------------------------------
+只分一类时无论是VOC_CLASSES = ('car')还是"car"都会报错
+不是别的问题，就是yolox单纯不支持只分一类的情况。迫不得已我给他加了一类"cat"
+这不好，我修改了voc.py里__init__里的定义，把self.class_to_ind固定为只有一个元素的字典
+这个也不对，但是我发现voc.py/的第294行（如果cls=="__background__"就跳过），所以给VOC_CLASSES加了一个不是"cat"，而是"__background__"的东西
+
+不行，这里改了的话他后面会报这个错
+----------------------------------------------------------------------------------------
+  File "C:\Users\aaa\Desktop\junior1\CV\AI3064_Computer_Vision_final_project_\referrences\YOLOX-main\yolox\data\datasets\voc.py", line 300, in _write_voc_results_file
+    dets = all_boxes[cls_ind][im_ind]
+           │         │        └ 0
+           │         └ 1
+           └ [[array([[3.5021561e+02, 4.7313135e+02, 4.3393692e+02, 5.0253906e+02,
+                     9.9962664e-01],
+                    [3.3930383e+02, 6.364415...
+
+IndexError: list index out of range
+----------------------------------------------------------------------------------------
+它需要cls_ind = 1，也就是"cat"那一类，但是我的Annotations里面确实只有一类那就是"car"
+
+由于它怎么都会出错，但是预测结果已经作为txt文件输出了
+所以我在根目录YOLOX-main下增加了一个visualize_helper文件，就用这个txt文件进行可视化
+
+
+不要有中文路径
+
+我把voc_eval.py里22、23行注释掉了（找pose和truncated，因为我没有写pose，我也判断不出来啥叫truncated，这个要写数据集的人才知道）
+
+
